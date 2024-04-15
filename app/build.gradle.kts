@@ -33,6 +33,19 @@ android {
             )
         }
     }
+
+    flavorDimensions += "appType"
+    productFlavors {
+        create("old-ui-") {
+            dimension = "appType"
+        }
+        create("new-ui-") {
+            dimension = "appType"
+            applicationIdSuffix = ".new"
+            versionNameSuffix = "-new"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

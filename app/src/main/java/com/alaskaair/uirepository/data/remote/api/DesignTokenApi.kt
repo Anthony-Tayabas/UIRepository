@@ -28,8 +28,8 @@ interface DesignTokenApi {
      * }
      */
 
-    @GET("/v3/qs/660e1d1ce41b4d34e4deeb95") // Auro Classic
-//    @GET("/v3/qs/660dcc54ad19ca34f85487bf") // Auro Hawaiian
+    @GET("/v3/qs/661d8cabacd3cb34a8390a5b") // Auro Classic
+//    @GET("/v3/qs/661d8b98acd3cb34a83909ef") // Auro Hawaiian
     suspend fun getDesignToken(): Response<DesignTokenResponse>
 
 }

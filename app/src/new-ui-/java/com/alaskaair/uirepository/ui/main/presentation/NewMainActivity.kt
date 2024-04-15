@@ -23,12 +23,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.alaskaair.uirepository.R
 import com.alaskaair.uirepository.common.State
-import com.alaskaair.uirepository.data.entity.DesignToken
-import com.alaskaair.uirepository.ui.component.FilledButton
 import com.alaskaair.uirepository.ui.main.viewmodel.DesignTokenViewModel
-import com.alaskaair.uirepository.ui.theme.UIRepositoryTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.alaskaair.thememanager.component.FilledButton as FilledButtonFromThemeManager
+import com.alaskaair.thememanager.component.OutlineButton as OutlineButtonFromThemeManager
+import com.alaskaair.thememanager.component.TextButton as TextButtonFromThemeManager
+import com.alaskaair.thememanager.data.DesignToken as DesignTokenForThemeManager
+import com.alaskaair.thememanager.theme.UIRepositoryTheme as UIRepositoryThemeForThemeManager
 
 /**
  * Main activity of the application.
@@ -39,7 +41,7 @@ import kotlinx.coroutines.launch
  * @property designTokenVM The ViewModel used to fetch design tokens.
  */
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class NewMainActivity : ComponentActivity() {
 
     // ViewModel for fetching design tokens
     private val designTokenVM: DesignTokenViewModel by viewModels()
@@ -82,33 +84,36 @@ class MainActivity : ComponentActivity() {
                 is State.DataState -> {
                     if (it.data.isSuccessful) {
                         Log.d("MainActivity", "Data: ${it.data.body()}")
-                        setContentUsingLocalThemeManager(
-                            designToken = it.data.body()?.getDesignToken()
+                        setContentUsingThemeManagerPackage(
+                            designToken = it.data.body()?.getDesignTokenForThemeManager()
                         )
                     } else {
                         Log.d("MainActivity", "Data: ${it.data.errorBody()}")
-                        setContentUsingLocalThemeManager(designToken = null)
+                        setContentUsingThemeManagerPackage(designToken = null)
                     }
                 }
 
                 is State.ErrorState -> {
-                    setContentUsingLocalThemeManager(designToken = null)
+                    setContentUsingThemeManagerPackage(designToken = null)
                 }
             }
         }
     }
 
     /**
-     * Sets the content of the application using the local theme manager.
+     * Sets the content of the application using the theme manager package.
      *
-     * This method sets the content of the application using the local theme manager.
+     * This method sets the content of the application using the theme manager package.
      * It uses the provided design token to set the theme of the application.
      *
      * @param designToken The design token used to set the theme of the application.
      */
-    private fun setContentUsingLocalThemeManager(designToken: DesignToken?) {
+    private fun setContentUsingThemeManagerPackage(designToken: DesignTokenForThemeManager?) {
         setContent {
-            UIRepositoryTheme(darkTheme = isDarkTheme.value, designToken = designToken) {
+            UIRepositoryThemeForThemeManager(
+                darkTheme = isDarkTheme.value,
+                designToken = designToken
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -132,10 +137,24 @@ class MainActivity : ComponentActivity() {
                         }
 
                         // FilledButton for login
-                        FilledButton(
+                        FilledButtonFromThemeManager(
                             modifier = Modifier
                                 .padding(32.dp),
                             text = "login"
+                        )
+                        // OutlineButton for joining mileage plan
+                        OutlineButtonFromThemeManager(
+                            modifier = Modifier
+                                .padding(horizontal = 32.dp)
+                                .padding(bottom = 32.dp),
+                            text = "join mileage plan"
+                        )
+                        // TextButton for continuing as guest
+                        TextButtonFromThemeManager(
+                            modifier = Modifier
+                                .padding(horizontal = 32.dp)
+                                .padding(bottom = 32.dp),
+                            text = "continue as guest"
                         )
                     }
                 }
